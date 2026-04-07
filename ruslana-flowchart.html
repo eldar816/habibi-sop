@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Упаковка заказов — Рослана</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #F5F0E8;
+    color: #1A1208;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .header {
+    background: #1A1208;
+    padding: 22px 30px 18px;
+    text-align: center;
+    border-bottom: 5px solid #C8922A;
+  }
+  .header .title {
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .header .sub {
+    font-size: 14px;
+    color: #F0D9A8;
+    margin-top: 4px;
+    font-weight: 700;
+  }
+
+  /* TOP WARNING */
+  .warning {
+    background: #B83232;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    text-align: center;
+    padding: 18px 20px;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+  }
+  .warning span { font-size: 26px; vertical-align: middle; margin-right: 8px; }
+
+  /* PAGE */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+
+  /* PHASE HEADER */
+  .phase {
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #7A6448;
+    margin: 36px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .phase::after { content:''; flex:1; height:2px; background:#E0D0B8; }
+
+  /* FLOW STRIP — horizontal chain of blocks with arrows */
+  .flow-strip {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .flow-block {
+    background: #fff;
+    border: 3px solid #E0D0B8;
+    border-radius: 16px;
+    padding: 20px 18px 16px;
+    text-align: center;
+    flex: 1;
+    min-width: 130px;
+    max-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  .flow-block .emoji { font-size: 42px; line-height: 1; }
+  .flow-block .label {
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.25;
+    color: #1A1208;
+  }
+  .flow-block .sub-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #7A6448;
+    line-height: 1.3;
+  }
+
+  /* special colors */
+  .flow-block.gold { background: #FBF4E8; border-color: #C8922A; }
+  .flow-block.gold .label { color: #7A4A00; }
+  .flow-block.red { background: #FDF0F0; border-color: #B83232; }
+  .flow-block.red .label { color: #B83232; }
+  .flow-block.green { background: #F0FAF4; border-color: #2A7A4A; }
+  .flow-block.green .label { color: #1A5A34; }
+  .flow-block.blue { background: #EFF6FD; border-color: #1E5080; }
+  .flow-block.blue .label { color: #1E5080; }
+
+  /* arrow between blocks */
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #C8922A;
+    padding: 0 4px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  /* DOWN ARROW */
+  .down-arrow {
+    text-align: center;
+    font-size: 36px;
+    color: #C8922A;
+    margin: 6px 0;
+    line-height: 1;
+  }
+
+  /* DECISION DIAMOND */
+  .decision-wrap {
+    margin: 6px 0;
+  }
+  .diamond {
+    background: #FBF4E8;
+    border: 3px solid #C8922A;
+    border-radius: 16px;
+    padding: 20px 24px;
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .diamond .q-label {
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #C8922A;
+    margin-bottom: 8px;
+  }
+  .diamond .q-text {
+    font-size: 20px;
+    font-weight: 900;
+    color: #1A1208;
+    line-height: 1.3;
+  }
+
+  /* SPLIT PATHS */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 8px 0;
+  }
+  .path-col {
+    border-radius: 16px;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .path-col.usa { background: #EFF6FD; border: 3px solid #1E5080; }
+  .path-col.intl { background: #F0FAF4; border: 3px solid #2A7A4A; }
+
+  .path-header {
+    font-size: 20px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(0,0,0,0.08);
+  }
+  .path-col.usa .path-header { color: #1E5080; }
+  .path-col.intl .path-header { color: #2A7A4A; }
+
+  /* step row inside path */
+  .path-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .path-step:last-child { border-bottom: none; }
+  .path-step .num {
+    font-size: 18px;
+    font-weight: 900;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .path-col.usa .path-step .num { background: #1E5080; }
+  .path-col.intl .path-step .num { background: #2A7A4A; }
+  .path-step .ico { font-size: 26px; flex-shrink: 0; }
+  .path-step .txt { font-size: 15px; font-weight: 800; line-height: 1.3; color: #1A1208; }
+  .path-step .txt small { display: block; font-size: 12px; font-weight: 700; color: #7A6448; margin-top: 2px; }
+
+  /* HIGHLIGHT NOTE inside path */
+  .path-note {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 10px 0 4px;
+    line-height: 1.35;
+  }
+  .path-col.intl .path-note { background: #fff; border: 2px solid #2A7A4A; color: #1A5A34; }
+  .path-col.usa .path-note { background: #fff; border: 2px solid #1E5080; color: #1E5080; }
+
+  /* SHARED STEPS */
+  .shared-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 4px 0;
+  }
+  .shared-block {
+    background: #fff;
+    border: 3px solid #E0D0B8;
+    border-radius: 14px;
+    padding: 18px 14px 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .shared-block .emoji { font-size: 38px; }
+  .shared-block .label { font-size: 15px; font-weight: 900; line-height: 1.25; }
+  .shared-block .sub { font-size: 12px; font-weight: 700; color: #7A6448; }
+  .shared-block.gold { background: #FBF4E8; border-color: #C8922A; }
+
+  /* FINAL CHECKLIST */
+  .checklist {
+    background: #fff;
+    border: 3px solid #2A7A4A;
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-top: 4px;
+  }
+  .checklist .cl-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #2A7A4A;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #E8F4EE;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1A1208;
+  }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-box {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #2A7A4A;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: #F0FAF4;
+    margin-top: 1px;
+  }
+  .cl-item .ico { font-size: 22px; flex-shrink: 0; }
+  .cl-item.intl-tag { opacity: 0.65; }
+
+  /* NEVER */
+  .never-box {
+    background: #B83232;
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-top: 4px;
+  }
+  .never-box .n-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+  .never-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .never-item:last-child { border-bottom: none; }
+  .never-item .x { font-size: 22px; flex-shrink: 0; }
+
+  /* FOOTER */
+  .footer {
+    background: #1A1208;
+    color: #F0D9A8;
+    text-align: center;
+    padding: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  @media print {
+    .split { page-break-inside: avoid; }
+    .checklist { page-break-inside: avoid; }
+  }
+
+  @media (max-width: 600px) {
+    .split { grid-template-columns: 1fr; }
+    .flow-strip { flex-direction: column; align-items: center; }
+    .arrow { transform: rotate(90deg); }
+    .shared-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title">📦 Упаковка заказов — Рослана</div>
+  <div class="sub">Habibi Perfumes · Следуй шаг за шагом</div>
+</div>
+
+<div class="warning">
+  <span>⚠️</span>СНАЧАЛА ВЫБЕРИ КОРОБКУ — потом берёшь духи
+</div>
+
+<div class="page">
+
+  <!-- ALWAYS FIRST -->
+  <div class="phase">Всегда — шаги 1–3</div>
+
+  <div class="flow-strip">
+    <div class="flow-block gold">
+      <div class="emoji">📋</div>
+      <div class="label">Открой заказ в Shopify</div>
+      <div class="sub-label">Сколько товаров? Куда едет?</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="flow-block gold">
+      <div class="emoji">📦</div>
+      <div class="label">Выбери коробку</div>
+      <div class="sub-label">Поставь пустую коробку на стол</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="flow-block gold">
+      <div class="emoji">📏</div>
+      <div class="label">Измерь и взвесь пустую коробку</div>
+      <div class="sub-label">Длина · Ширина · Высота · Вес</div>
+    </div>
+  </div>
+
+  <!-- DECISION -->
+  <div class="down-arrow">↓</div>
+  <div class="decision-wrap">
+    <div class="diamond">
+      <div class="q-label">❓ Куда едет заказ?</div>
+      <div class="q-text">США 🇺🇸 &nbsp;или&nbsp; За границу 🌍</div>
+    </div>
+  </div>
+  <div class="down-arrow">↓</div>
+
+  <!-- SPLIT PATHS -->
+  <div class="phase">Выбери свой путь</div>
+
+  <div class="split">
+
+    <!-- USA -->
+    <div class="path-col usa">
+      <div class="path-header">🇺🇸 США</div>
+
+      <div class="path-note">
+        Взвешивать каждые духи НЕ нужно.<br>Только общий вес посылки в конце.
+      </div>
+
+      <div class="path-step">
+        <div class="num">1</div>
+        <div class="ico">🌸</div>
+        <div class="txt">Возьми духи из заказа</div>
+      </div>
+      <div class="path-step">
+        <div class="num">2</div>
+        <div class="ico">📦</div>
+        <div class="txt">Положи духи в коробку</div>
+      </div>
+      <div class="path-step">
+        <div class="num">3</div>
+        <div class="ico">🧸</div>
+        <div class="txt">Добавь упаковочный материал</div>
+      </div>
+      <div class="path-step">
+        <div class="num">4</div>
+        <div class="ico">📮</div>
+        <div class="txt">Закрой и заклей коробку</div>
+      </div>
+      <div class="path-step">
+        <div class="num">5</div>
+        <div class="ico">⚖️</div>
+        <div class="txt">Взвесь всю посылку</div>
+        <div class="txt"><small>Полный вес — с духами внутри</small></div>
+      </div>
+      <div class="path-step">
+        <div class="num">6</div>
+        <div class="ico">💻</div>
+        <div class="txt">Введи в Shopify:<br>размеры + общий вес</div>
+      </div>
+    </div>
+
+    <!-- INTERNATIONAL -->
+    <div class="path-col intl">
+      <div class="path-header">🌍 За границу</div>
+
+      <div class="path-note">
+        ⚠️ Для каждых духов нужен вес.<br>Сначала проверь — есть ли он в системе.
+      </div>
+
+      <div class="path-step">
+        <div class="num">1</div>
+        <div class="ico">🔍</div>
+        <div class="txt">Для каждых духов: вес сохранён?
+          <small>ДА → используй сохранённый вес<br>НЕТ → взвесь и сохрани в систему</small>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="num">2</div>
+        <div class="ico">🌸</div>
+        <div class="txt">Возьми духи из заказа</div>
+      </div>
+      <div class="path-step">
+        <div class="num">3</div>
+        <div class="ico">📦</div>
+        <div class="txt">Положи духи в коробку</div>
+      </div>
+      <div class="path-step">
+        <div class="num">4</div>
+        <div class="ico">🧸</div>
+        <div class="txt">Добавь упаковочный материал</div>
+      </div>
+      <div class="path-step">
+        <div class="num">5</div>
+        <div class="ico">📮</div>
+        <div class="txt">Закрой и заклей коробку</div>
+      </div>
+      <div class="path-step">
+        <div class="num">6</div>
+        <div class="ico">⚖️</div>
+        <div class="txt">Взвесь всю посылку</div>
+      </div>
+      <div class="path-step">
+        <div class="num">7</div>
+        <div class="ico">💻</div>
+        <div class="txt">Введи в Shopify:<br>размеры + общий вес</div>
+      </div>
+      <div class="path-step">
+        <div class="num">8</div>
+        <div class="ico">🛃</div>
+        <div class="txt">Введи таможенные данные для КАЖДЫХ духов:
+          <small>Описание: Perfume · Код: 330300<br>Страна происхождения · Вес</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SHARED FINAL STEPS -->
+  <div class="down-arrow">↓</div>
+  <div class="phase">Оба пути — финальные шаги</div>
+
+  <div class="shared-grid">
+    <div class="shared-block gold">
+      <div class="emoji">🔄</div>
+      <div class="label">Обнови тарифы в Shopify</div>
+      <div class="sub">Нажми «Обновить тарифы»</div>
+    </div>
+    <div class="shared-block gold">
+      <div class="emoji">🚚</div>
+      <div class="label">Выбери перевозчика</div>
+      <div class="sub">Лучший вариант из списка</div>
+    </div>
+    <div class="shared-block gold">
+      <div class="emoji">🖨️</div>
+      <div class="label">Распечатай этикетку</div>
+      <div class="sub">Принтер должен работать</div>
+    </div>
+    <div class="shared-block gold">
+      <div class="emoji">📌</div>
+      <div class="label">Наклей этикетку на коробку</div>
+      <div class="sub">Старые этикетки убери</div>
+    </div>
+  </div>
+
+  <!-- FINAL CHECKLIST -->
+  <div class="phase">✅ Финальная проверка</div>
+
+  <div class="checklist">
+    <div class="cl-title">✅ Перед тем как закончить — проверь всё:</div>
+    <div class="cl-item"><span class="cl-box"></span><span class="ico">🌸</span> Правильные духи внутри коробки</div>
+    <div class="cl-item"><span class="cl-box"></span><span class="ico">📦</span> Правильная коробка использована</div>
+    <div class="cl-item"><span class="cl-box"></span><span class="ico">📏</span> Размеры коробки введены в Shopify</div>
+    <div class="cl-item"><span class="cl-box"></span><span class="ico">⚖️</span> Общий вес посылки введён в Shopify</div>
+    <div class="cl-item intl-tag"><span class="cl-box"></span><span class="ico">🛃</span> 🌍 За границу: таможенные данные заполнены для ВСЕХ духов</div>
+    <div class="cl-item"><span class="cl-box"></span><span class="ico">📌</span> Этикетка наклеена ровно и хорошо видна</div>
+  </div>
+
+  <!-- NEVER -->
+  <div class="phase">🚫 Никогда не делай это</div>
+
+  <div class="never-box">
+    <div class="n-title">🚫 НЕЛЬЗЯ:</div>
+    <div class="never-item"><span class="x">✗</span> Брать духи раньше, чем выбрала коробку</div>
+    <div class="never-item"><span class="x">✗</span> Угадывать или придумывать вес</div>
+    <div class="never-item"><span class="x">✗</span> Пропускать взвешивание новых духов (за границу)</div>
+    <div class="never-item"><span class="x">✗</span> Забыть сохранить новый вес в систему</div>
+    <div class="never-item"><span class="x">✗</span> Отправить посылку за границу без таможенных данных</div>
+  </div>
+
+</div>
+
+<div class="footer">Habibi Perfumes LLC · Для Рославы · Только для внутреннего использования</div>
+
+</body>
+</html>
